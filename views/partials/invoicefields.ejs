@@ -1,0 +1,90 @@
+
+
+<fieldset class='details'>
+
+<!-- basic invoice details -->
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+  <div class="form-field <%= errors.clientId ? 'form-field-invalid' : '' %>">
+    <label for="clientId">Bill to</label>
+    <select name="clientId">
+      <% if (data.clientId && !errors.clientId) { %>
+        <option  value="<%=selected._id%>"><%= selected.name%></option>
+      <% } else { %>
+        <option value='select client'>select client</option>
+        <%   } %>
+        <% clients.forEach((client) => { %>
+          <option value="<%=client._id%>"><%=client.name%>
+          <%= client._id === data.clientId ? "selected='selected'":"" %></option>
+        <%})%>
+    </select>
+    <% if (errors.clientId) { %>
+      <div class="error"><%= errors.clientId.msg %></div>
+    <% } %>
+  </div>
+
+  <div class="form-field <%= errors.invDate ? 'form-field-invalid' : '' %>">
+    <label for="invDate">Invoice Date</label>
+    <input class="input" name="invDate" type="date" value="<%=moment(data.invDate).format('YYYY-MM-DD')%>" />
+    <% if (errors.invDate) { %>
+      <div class="error"><%= errors.invDate.msg %></div>
+    <% } %>
+  </div>
+
+  <div class="form-field <%= errors.invNo ? 'form-field-invalid' : '' %>">
+    <label for="invNo">Invoice Number</label>
+    <input class="input" id="invNo" name="invNo" type="number" value="<%=data.invNo%>" />
+    <% if (errors.invNo) { %>
+      <div class="error"><%= errors.invNo.msg %></div>
+    <% } %>
+  </div>
+
+  <div class="form-field <%= errors.message ? 'form-field-invalid' : '' %>">
+    <label for="message">Message</label>
+    <textarea class="input" id="message" name="message" rows="2"><%=data.message%></textarea>
+    <% if (errors.message) { %>
+      <div class="error"><%= errors.message.msg %></div>
+    <% } %>
+  </div>
+
+</fieldset>
+
+<!-- invoice items -->
+
+<div id="invoiceItems">
+  <% if (Array.isArray(data.items) && data.items.length) { %>
+    <% data.items.forEach((item, index)=>{ %>
+      <fieldset id= "item-<%=index%>">
+        <div class='form-field'>
+          <input class="input" id= "items[<%=index%>][date]" name= "items[<%=index%>][date]" type="date" value="<%=moment(item.date).format("YYYY-MM-DD")%>"/>
+        </div>
+
+        <div class='form-field'>
+          <select class='input' id='items[<%=index%>][type]' name='items[<%=index%>][type]'>
+              <option value="<%= item.type %>"><%= item.type %></option>
+              <option value="Labour">Labour</option>
+              <option value="Materials">Materials</option>
+              <option value="Expense">Expense</option>
+          </select>
+        </div>
+
+        <div class='form-field'>
+          <textarea class='input' id='items[<%=index%>][desc]' name='items[<%=index%>][desc]' rows='6'><%= item.desc %></textarea>
+        </div>
+
+        <div class='form-field'>
+          <input class='input' id='items[<%=index%>][fee]' name='items[<%=index%>][fee]' type='number' value="<%=item.fee%>">
+        </div>
+
+        <div class="form-actions">
+          <button onclick="remove_fieldset(<%=index%>)" class="btn danger"  type="button">remove</button>
+        </div>
+
+      </fieldset>
+    <%  }); %>
+  <% } %>
+</div>
+
+<div class="form-actions">
+  <button onclick="add_item_fields()" class="btn"  type="button">add item</button>
+</div>

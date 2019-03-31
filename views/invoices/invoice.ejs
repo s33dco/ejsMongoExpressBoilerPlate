@@ -1,0 +1,136 @@
+<div class="actionBox">
+  <h3>Invoice and Client Details</h3>
+  <div class="actionBox">
+    <p class='title'>Invoice <%= invoice.invNo %></p>
+    <p class='title'><%= moment(invoice.invDate).format("Do MMMM YYYY") %></p>
+    <p><a href="/clients/<%= invoice.client._id %>" class='capitalize'><%= invoice.client.name %></a></p>
+    <p class='capitalize'><%=invoice.client.address1%></p>
+    <% if (invoice.client.address2){ %>
+      <p class='capitalize'><%=invoice.client.address2%></p>
+    <% } %>
+    <% if (invoice.client.address3){ %>
+      <p class='capitalize'><%=invoice.client.address3%></p>
+    <% } %>
+    <p><%=invoice.client.postcode%></p>
+    <p><%= invoice.client.email %></p>
+    <p><%= invoice.client.phone %></p>
+  </div>
+</div>
+
+<div class="actionBox">
+  <h3>Message</h3>
+  <div class="actionBox">
+    <p><%= invoice.message%> </p>
+  </div>
+</div>
+
+<div class="actionBox">
+  <h3>Signature</h3>
+  <div class="actionBox">
+    <p><%=invoice.details.farewell %></p>
+    <p class='capitalize'><%= invoice.details.contact %></p>
+  </div>
+</div>
+
+<div class="actionBox">
+  <h3>Invoiced Items</h3>
+  <% itemsByDateAndType.forEach((item) => { %>
+    <div class="actionBox">
+      <p class='title'><%= moment(item._id).format("dddd Do MMMM  YYYY")%>.</p>
+      <% item.item.forEach((charge)=> { %>
+        <p class='title'><%= charge.type %> £<%= charge.fee %></p>
+        <p><%= charge.desc %></p>
+      <% }) %>
+    </div>
+  <% }) %>
+</div>
+
+<div class="actionBox">
+  <h3>Invoice Total</h3>
+  <div class="actionBox">
+      <p class='title'>£<%= total %></p>
+      <% if (invoice.paid) { %>
+        <p class='title'>Received with thanks <%= moment(invoice.datePaid).format("Do MMMM YYYY") %>.</p>
+      <% } %>
+  </div>
+</div>
+
+<div class="actionBox">
+  <h3>Business Details</h3>
+  <div class="actionBox">
+    <p class='capitalize'><%= invoice.details.business %></p>
+    <p class='capitalize'><%= invoice.details.address1 %></p>
+    <% if (invoice.details.address2){ %>
+      <p class='capitalize'><%= invoice.details.address2 %></p>
+    <% } %>
+    <% if (invoice.details.address3){ %>
+      <p class='capitalize'><%= invoice.details.address3 %></p>
+    <% } %>
+    <p class='capitalize'><%= invoice.details.postcode %></p>
+    <p><%= invoice.details.email %></p>
+    <p><%= invoice.details.phone %></p>
+  </div>
+</div>
+
+<div class="actionBox">
+  <h3>Payment Details.</h3>
+  <div class="actionBox">
+    <p>UTR : <%= invoice.details.utr %></p>
+    <p class='capitalize'><%= invoice.details.bank %></p>
+    <p class='capitalize'>Sort Code : <%= invoice.details.sortcode %></p>
+    <p class='capitalize'>Account No: <%= invoice.details.accountNo %>.</p>
+    <p class='capitalize'><%= invoice.details.terms %></p>
+  </div>
+</div>
+
+<form method="post" action="/invoices/email?_method=post" novalidate>
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  <input type="hidden" name="id" value="<%= invoice._id %>">
+  <div class="form-actions">
+    <button class="btn" type="submit">Email Invoice</button>
+  </div>
+</form>
+
+<% if (admin) { %>
+  <div class="edit">
+    <form>
+      <a href="/invoices/edit/<%= invoice._id %>" class="form-actions btn title">
+        Edit Invoice</a>
+    </form>
+  </div>
+
+  <% if (invoice.paid){ %>
+    <div class="unpaid">
+      <form method="post" action="/invoices/unpaid?_method=post" novalidate>
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <input type="hidden" name="id" value="<%= invoice._id %>">
+        <div class="form-actions">
+          <button class="btn" type="submit">Mark as Unpaid</button>
+        </div>
+      </form>
+    </div>
+
+
+  <% } else { %>
+
+  <div class="paid">
+    <form method="post" action="/invoices/paid?_method=post" novalidate>
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <input type="hidden" name="id" value="<%= invoice._id %>">
+      <div class="form-actions">
+        <button class="btn" type="submit">Mark as Paid</button>
+      </div>
+    </form>
+  </div>
+
+  <% } %>
+  <div class="delete">
+    <form method="post" action="/invoices?_method=DELETE" novalidate>
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <input type="hidden" name="id" value="<%= invoice._id %>">
+      <div class="form-actions">
+        <button class="btn danger" type="submit">Delete</button>
+      </div>
+    </form>
+  </div>
+<% } %>

@@ -1,0 +1,51 @@
+<div class="actionBox">
+
+
+<header>
+  <h1 class='capitalize'><%=user.firstName%> <%=user.lastName%></h1>
+</header>
+
+<div class="edit">
+  <form>
+    <a href="/users/edit/<%= user._id %>" class="form-actions btn title">Edit <%=user.firstName%></a>
+  </form>
+</div>
+
+
+<% if (!user.isAdmin){ %>
+  <div class="upgrade">
+    <form method="post" action="/users/upgrade?_method=post" novalidate>
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <input type="hidden" name="id" value="<%= user._id %>">
+      <div class="form-actions">
+        <button class="btn" type="submit">Make Admin</button>
+      </div>
+    </form>
+  </div>
+
+
+<% } else { %>
+
+<div class="downgrade">
+  <form method="post" action="/users/downgrade?_method=post" novalidate>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <input type="hidden" name="id" value="<%= user._id %>">
+    <div class="form-actions">
+      <button class="btn danger" type="submit">No Admin</button>
+    </div>
+  </form>
+</div>
+
+
+<% }%>
+
+<div class="delete">
+  <form method="post" action="/users?_method=DELETE" novalidate>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <input type="hidden" name="id" value="<%= user._id %>">
+    <div class="form-actions">
+      <button class="btn danger" type="submit">Delete</button>
+    </div>
+  </form>
+</div>
+</div>

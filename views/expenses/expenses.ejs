@@ -1,0 +1,24 @@
+<div class="actionBox">
+  <% if (admin) { %>
+    <header>
+      <h1>HMRC Expenses</h1>
+      <p>For guidance on permitted expenses refer to the <a href="https://www.gov.uk/expenses-if-youre-self-employed">hmrc website</a></p>
+    </header>
+  <% } %>
+</div>
+
+<% if (expenses.length > 0) { %>
+  <a class='toggle btn info' href="#previousExpenses">Previous Expenses £<%=totalExpenses%></a>
+  <div class="toggle-content" id="previousExpenses">
+    <% expenses.forEach((expense) => { %>
+      <div class="actionBox">
+        <a href="/expenses/<%=expense._id%>">
+          <p class='title'><a href="/expenses/<%=expense._id%>"><%=expense.category%>, £<%=expense.amount%></p>
+        </a>
+        <p><%=moment(expense.date).format("Do MMMM YYYY")%>, <%=expense.desc%>.</p>
+      </div>
+    <% }); %>
+  </div>
+<% } %>
+
+<a class='btn' href="/expenses/new">Add an expense.</a>

@@ -1,0 +1,46 @@
+<div class="actionBox">
+  <header>
+    <h1>Invoice Information.</h1>
+  </header>
+</div>
+
+<div class="actionBox">
+  <h2 class='capitalize'><%= detail.business %></h2>
+</div>
+
+<div class="actionBox">
+  <h3>Contact Details.</h3>
+  <p class='capitalize'><%= detail.address1%></p>
+  <% if (detail.address2) { %>
+   <p class='capitalize'><%= detail.address2%></p>
+  <% } %>
+  <% if (detail.address3) { %>
+   <p class='capitalize'><%= detail.address3%></p>
+  <% } %>
+  <p><%= detail.postcode%></p>
+  <p><%= detail.email %></p>
+  <p><%= detail.phone %></p>
+</div>
+
+<div class="actionBox">
+  <h3>Signature.</h3>
+  <p><%= detail.farewell %></p>
+  <p class='capitalize'><%= detail.contact %></p>
+</div>
+
+<div class="actionBox">
+  <h3>Pay Details.</h3>
+  <p>UTR : <%=detail.utr %></p>
+  <p class='capitalize'>Bank Name : <%= detail.bank %></p>
+  <p>Sort Code : <%= detail.sortcode %></p>
+  <p>Account No: <%= detail.accountNo %></p>
+</div>
+
+<div class="actionBox">
+  <h3>Invoice Terms.</h3>
+  <p><%= detail.terms %></p>
+</div>
+
+<form>
+  <a href="/details/edit" class="form-actions btn title">Edit Details</a>
+</form>

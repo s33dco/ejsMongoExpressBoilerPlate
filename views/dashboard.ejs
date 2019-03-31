@@ -1,0 +1,50 @@
+<div class="actionBox">
+  <header>
+    <h1 class='capitalize'><%=title%></h1>
+  </<header>
+
+
+  <div class="actionBox">
+    <h3>Average Weekly Income</h3>
+      <p class="centre">Invoiced: £<%=avWeekEarningsGross%></p>
+      <p class="centre">HMRC declared: £<%=averageNettPerWeek%></p>
+  </div>
+
+  <div class="actionBox">
+    <h3>Totals to Date</h3>
+    <p class="centre">Invoiced : £<%=moneyIn%></p>
+    <p class="centre">HMRC declared : £<%=totalHMRC%></p>
+  </div>
+
+  <div class="actionBox">
+    <h3>Invoices</h3>
+    <p class="centre"><%=invoices%> created</p>
+    <p class="centre"><%=items%> items invoiced</p>
+    <p class="centre"><%=numberOfClients%> clients</p>
+  </div>
+
+
+</div>
+
+<% if (unpaidInvoiceList.length > 0) { %>
+
+    <a class='toggle btn info' href="#outstanding">Unpaid Invoices £<%=moneyDue%></a>
+    <div class="toggle-content" id="outstanding">
+      <% unpaidInvoiceList.forEach((invoice) => { %>
+        <form method="post" action="/invoices/paid?_method=POST"  novalidate>
+          <p><a href="/invoices/<%=invoice._id.invoice_id%>">Invoice <%= invoice._id.invoice %></a> for
+            <a href="/clients/<%= invoice._id.clientLink %>"><%= invoice._id.client %></a>
+          </p>
+          <p>£<%= invoice.total%> due <%= moment(invoice._id.date).fromNow()%>.</p>
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        	<input type="hidden" name="id" value="<%= invoice._id.invoice_id %>">
+          <% if (fullAdmin) { %>
+            <div class="form-actions">
+              <button class="btn" type="submit">Mark as Paid</button>
+            </div>
+          <% } %>
+        </form>
+      <% }); %>
+    </div>
+
+<% } %>

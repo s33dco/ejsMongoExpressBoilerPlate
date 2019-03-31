@@ -1,0 +1,50 @@
+<div class="actionBox">
+  <header>
+    <h1 class='capitalize'><%=client.name%></h1>
+  </header>
+  <p class='capitalize'><%=client.address1%></p>
+  <p class='capitalize'><%=client.address2%></p>
+  <p class='capitalize'><%=client.address3%></p>
+  <p><%=client.postcode%></p>
+  <p><%=client.phone%></p>
+  <p><%=client.email%></p>
+  <h3>£<%= total %> previously billed.</h3>
+</div>
+
+<% if (itemsList.length > 0) { %>
+  <div class="actionBox">
+    <a class='toggle btn info' href="#previousItems">Previous Items (<%= itemsList.length %>)</a>
+    <div class="toggle-content" id="previousItems">
+      <% itemsList.forEach((item) => { %>
+      <% if (item.paid) { %>
+        <div class="actionBox">
+      <% } else { %>
+        <div class="actionBox owed">
+      <% } %>
+          <p class='title'><%= moment(item.items.date).format("Do MMMM YYYY") %></p>
+          <p><a href="/invoices/<%= item._id%>">Invoice <%= item.invNo %></a> £<%= item.items.fee %></p>
+          <p><%= item.items.desc %></p>
+        </div>
+      <% }); %>
+    </div>
+  </div>
+<% } %>
+
+<% if (admin) { %>
+  <div class="edit">
+    <form>
+      <a href="/clients/edit/<%=client._id%>" class="form-actions btn title">
+        Edit <%=client.name%></a>
+    </form>
+  </div>
+
+  <div class="delete">
+    <form method="post" action="/clients?_method=delete" novalidate>
+      <input type="hidden" name="_csrf" value="<%=csrfToken%>">
+      <input type="hidden" name="id" value="<%=client._id%>">
+      <div class="form-actions">
+        <button class="btn danger" type="submit">Delete</button>
+      </div>
+    </form>
+  </div>
+<% } %>

@@ -1,0 +1,16 @@
+<div class="actionBox">
+  <% if (admin) { %>
+    <header>
+      <h1>Clients.</h1>
+    </header>
+  <% } %>
+  <ul>
+    <% clients.forEach((client) => {%>
+      <li class='list'>
+        <a href="/clients/<%=client._id%>" class='title'><%= client.name%></a>
+      </li>
+    <%})%>
+  </ul>
+</div>
+
+<a class='btn' href="/clients/new">Add a new client.</a>
